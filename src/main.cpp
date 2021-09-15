@@ -174,6 +174,11 @@ void UpdateDrawFrame(void)
             //DrawTextEx(font, FormatText("Postiion x : %d y : %d", (int) punches[i].position.x, (int) punches[i].position.y), Vector2{ 20, 20 }, fontSize, 2, RED);
             //DrawTextEx(font, FormatText("Postiion x : %d y : %d", screenWidth, screenHeight), Vector2{ 50, screenHeight - 20.0f }, fontSize, 2, RED);
         }
+
+
+        DrawRectangle(0, 0, screenWidth, 30, BLACK);
+        DrawText(TextFormat("Punches: %i", punchesCount), 10, 5, 20, RED);
+        DrawFPS(screenWidth - 85, 5);
     }
 
     EndDrawing();
