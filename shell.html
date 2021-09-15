@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Punchmark</title>
+
+    <!-- Meta information -->
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Punchmark is a benchmarking custom OpenGL application for punchmarking the portable hardware (mobile) devices."
+    />
+    <meta
+      name="keywords"
+      content="penchmark, penchmark-raylib, videogame, games, c++, benchmark"
+    />
+
+    <!-- Open Graph metatags for sharing -->
+    <meta property="og:title" content="Punchmark" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image"
+      content="https://github.com/guasam/punchmark/raw/main/resources/icon.png"
+    />
+    <meta property="og:site_name" content="Raylib Web Starter" />
+    <meta
+      property="og:url"
+      content="https://github.com/guasam/punchmark"
+    />
+    <meta
+      property="og:description"
+      content="Punchmark is a benchmarking custom OpenGL application for punchmarking the portable hardware (mobile) devices."
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://github.com/guasam/punchmark/raw/main/resources/icon.ico"
+    />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"
+      integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link
+      rel="shortcut icon"
+      href="https://github.com/guasam/punchmark/raw/main/resources/icon.ico"
+    />
+
+    <style>
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.5;
+        background-color: #f5f5f5;
+      }
+
+      #rws-header {
+        position: relative;
+        display: flex;
+        height: 50px;
+        background-color: #3765af;
+        align-items: center;
+        z-index: 100;
+      }
+
+      #rws-header .logo {
+        font-weight: bold;
+        color: #fff;
+        margin: 0 16px;
+        text-shadow: 0px 1px black;
+        font-size: 16px;
+      }
+
+      #rws-header #spinner {
+        display: flex;
+        align-items: center;
+        background: hsl(217deg 52% 35%);
+        padding: 4px 8px;
+        color: #fff;
+        border-radius: 4px;
+        font-size: calc(1rem - 2px);
+        opacity: 0.75;
+      }
+
+      #rws-header #spinner .fa-spinner {
+        margin-right: 0.5rem;
+      }
+
+      input[type='button'] {
+        background: hsl(217deg 52% 70%);
+        font-size: 12px;
+        border: 0;
+        border-radius: 4px;
+        padding: 4px 8px;
+        color: #0d1727;
+      }
+
+      .emscripten {
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+
+      #console-switch {
+        border-radius: 4px;
+        color: #fff;
+        text-align: center;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 12px;
+        background: hsl(217deg 52% 35%);
+        margin-right: 16px;
+      }
+      #console-switch:active {
+        background: hsl(217deg 52% 28%);
+      }
+      #console-switch:not(.active) .fa-angle-up,
+      #console-switch.active .fa-angle-down {
+        display: none;
+      }
+
+      .console {
+        display: flex;
+        flex-direction: column;
+        background: hsl(217deg 26% 16% / 99%);
+        position: fixed;
+        top: 50px;
+        bottom: 0;
+        z-index: 10;
+        right: 0;
+        left: 0;
+        transform: translateY(-100%);
+        transition: 0.2s transform ease-in-out;
+      }
+      .console.active {
+        transform: translateY(0);
+      }
+      .console-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .console-controls .button {
+        background: hsl(216deg 20% 25%);
+        font-size: 12px;
+        border: 0;
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: #c1c1c1;
+        margin: 25px;
+        margin-bottom: 0;
+      }
+      .console-controls .button:active {
+        background: hsl(216deg 20% 20%);
+      }
+
+      div.emscripten {
+        text-align: center;
+      }
+
+      /* Canvas [MUST NOT] have any border or padding to prevent invalid mouse coordinates */
+      canvas.emscripten {
+        border: 0px none;
+        background: #f5f5f5;
+        width: 100%;
+      }
+
+      .output-wrapper {
+        padding: 6px;
+      }
+      .output-wrapper #output {
+        width: 100%;
+        height: 140px;
+        display: block;
+        background-color: #10151c;
+        color: rgb(37, 174, 38);
+        font-family: 'Lucida Console', Monaco, monospace;
+        border: 0;
+        box-sizing: border-box;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rws-header">
+      <h1 class="logo">Raylib Web Starter</h1>
+
+      <div id="spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <div class="emscripten" id="status">Downloading...</div>
+      </div>
+
+      <div class="emscripten">
+        <progress value="0" max="100" id="progress" hidden="1"></progress>
+      </div>
+
+      <div id="console-switch" onclick="toggleConsole(this)">
+        <i class="fas fa-angle-down"></i>
+        <i class="fas fa-angle-up"></i>
+      </div>
+    </div>
+
+    <div class="console">
+      <div class="console-controls">
+        <input
+          class="button"
+          type="button"
+          value="FULLSCREEN"
+          onclick="Module.requestFullscreen(false, false)"
+        />
+        <input
+          class="button"
+          type="button"
+          id="btn-audio"
+          value="SUSPEND"
+          onclick="toggleAudio()"
+        />
+      </div>
+      <div class="output-wrapper">
+        <textarea id="output" rows="8" spellcheck="false" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="emscripten_border">
+      <canvas
+        class="emscripten"
+        id="canvas"
+        oncontextmenu="event.preventDefault()"
+        tabindex="-1"
+      ></canvas>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/gh/eligrey/FileSaver.js/dist/FileSaver.min.js"
+    ></script>
+    <script type="text/javascript">
+      function saveFileFromMEMFSToDisk(memoryFSname, localFSname) {
+        // This can be called by C/C++ code
+        var isSafari = /^((?!chrome|android).)*safari/i.test(
+          navigator.userAgent,
+        );
+        var data = FS.readFile(memoryFSname);
+        var blob;
+
+        if (isSafari)
+          blob = new Blob([data.buffer], { type: 'application/octet-stream' });
+        else
+          blob = new Blob([data.buffer], { type: 'application/octet-binary' });
+
+        // NOTE: SaveAsDialog is a browser setting. For example, in Google Chrome,
+        // in Settings/Advanced/Downloads section you have a setting:
+        // 'Ask where to save each file before downloading' - which you can set true/false.
+        // If you enable this setting it would always ask you and bring the SaveAsDialog
+        saveAs(blob, localFSname);
+      }
+    </script>
+    <script type="text/javascript">
+      var statusElement = document.querySelector('#status');
+      var progressElement = document.querySelector('#progress');
+      var spinnerElement = document.querySelector('#spinner');
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print: (function () {
+          var element = document.querySelector('#output');
+
+          if (element) element.value = ''; // Clear browser cache
+
+          return function (text) {
+            if (arguments.length > 1)
+              text = Array.prototype.slice.call(arguments).join(' ');
+            // These replacements are necessary if you render to raw HTML
+            //text = text.replace(/&/g, "&amp;");
+            //text = text.replace(/</g, "&lt;");
+            //text = text.replace(/>/g, "&gt;");
+            //text = text.replace('\n', '<br>', 'g');
+            console.log(text);
+
+            if (element) {
+              element.value += text + '\n';
+              element.scrollTop = element.scrollHeight; // focus on bottom
+            }
+          };
+        })(),
+        printErr: function (text) {
+          if (arguments.length > 1)
+            text = Array.prototype.slice.call(arguments).join(' ');
+
+          console.error(text);
+        },
+        canvas: (function () {
+          var canvas = document.querySelector('#canvas');
+
+          // As a default initial behavior, pop up an alert when webgl context is lost.
+          // To make your application robust, you may want to override this behavior before shipping!
+          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+          canvas.addEventListener(
+            'webglcontextlost',
+            function (e) {
+              alert('WebGL context lost. You will need to reload the page.');
+              e.preventDefault();
+            },
+            false,
+          );
+
+          return canvas;
+        })(),
+        setStatus: function (text) {
+          if (!Module.setStatus.last)
+            Module.setStatus.last = { time: Date.now(), text: '' };
+          if (text === Module.setStatus.last.text) return;
+
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+
+          if (m && now - Module.setStatus.last.time < 30) return; // If this is a progress update, skip it if too soon
+
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+
+          if (m) {
+            text = m[1];
+            progressElement.value = parseInt(m[2]) * 100;
+            progressElement.max = parseInt(m[4]) * 100;
+            progressElement.hidden = true;
+            spinnerElement.hidden = false;
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.hidden = true;
+            if (!text) spinnerElement.style.display = 'none';
+          }
+
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function (left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(
+            left
+              ? 'Preparing... (' +
+                  (this.totalDependencies - left) +
+                  '/' +
+                  this.totalDependencies +
+                  ')'
+              : 'All downloads complete.',
+          );
+        },
+        onRuntimeInitialized: function () {
+          my_add = Module.cwrap('my_add', 'number', ['number', 'number']);
+          console.log('1 + 2 = ' + my_add(1, 2));
+        },
+        //noInitialRun: true
+      };
+
+      Module.setStatus('Downloading...');
+
+      window.onerror = function () {
+        Module.setStatus('Exception thrown, see JavaScript console');
+        spinnerElement.style.display = 'none';
+        Module.setStatus = function (text) {
+          if (text) Module.printErr('[post-exception status] ' + text);
+        };
+      };
+    </script>
+
+    <!-- REF: https://developers.google.com/web/updates/2018/11/web-audio-autoplay -->
+    <script type="text/javascript">
+      var audioBtn = document.querySelector('#btn-audio');
+
+      // An array of all contexts to resume on the page
+      const audioContexList = [];
+      (function () {
+        // A proxy object to intercept AudioContexts and
+        // add them to the array for tracking and resuming later
+        self.AudioContext = new Proxy(self.AudioContext, {
+          construct(target, args) {
+            const result = new target(...args);
+            audioContexList.push(result);
+            if (result.state == 'suspended') audioBtn.value = '🔈 RESUME';
+            return result;
+          },
+        });
+      })();
+
+      function toggleAudio() {
+        var resumed = false;
+        audioContexList.forEach((ctx) => {
+          if (ctx.state == 'suspended') {
+            ctx.resume();
+            resumed = true;
+          } else if (ctx.state == 'running') ctx.suspend();
+        });
+
+        if (resumed) audioBtn.value = '🔇 SUSPEND';
+        else audioBtn.value = '🔈 RESUME';
+      }
+    </script>
+
+    <script type="text/javascript">
+      var rwsHeader = document.getElementById('rws-header');
+
+      function toggleConsole(elem) {
+        var consoleElem = document.querySelector('.console');
+        consoleElem.classList.toggle('active');
+        elem.classList.toggle('active');
+      }
+
+      function available_screen_width() {
+        return window.innerWidth;
+      }
+
+      function available_screen_height() {
+        return window.innerHeight - rwsHeader.clientHeight;
+      }
+
+      function debounce(func) {
+        var timer;
+        return function (event) {
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(func, 100, event);
+        };
+      }
+
+      window.addEventListener(
+        'resize',
+        debounce(function (e) {
+          var canvas = document.getElementsByTagName('canvas')[0];
+          my_add = Module.cwrap('my_add', 'number', ['number', 'number']);
+          canvas.width = available_screen_width();
+          canvas.height = available_screen_height();
+          my_add(canvas.width, canvas.height);
+          console.log('end of resizing');
+        }),
+      );
+    </script>
+
+    {{{ SCRIPT }}}
+  </body>
+</html>

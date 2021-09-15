@@ -1,0 +1,24 @@
+{
+  "name": "raylib-web-starter",
+  "version": "1.0.0",
+  "description": "Raylib Web Starter is a custom project for creating cool things based on Raylib C++ for Web Platform with easy setup",
+  "license": "MIT",
+  "homepage": "https://guasam.github.io/raylib-web-starter",
+  "author": {
+    "name": "Guasam",
+    "url": "https://github.com/guasam"
+  },
+  "scripts": {
+    "pre:make": "node premake.js",
+    "make": "pnpm pre:make && make PLATFORM=PLATFORM_WEB -B && pnpm pre:deploy",
+    "serve": "serve build",
+    "pre:deploy": "pnpm pre:make prepare-deploy",
+    "deploy": "gh-pages -d build",
+    "clean": "rm -rf build/ out/ obj/"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "gh-pages": "^3.2.3",
+    "serve": "^12.0.1"
+  }
+}
