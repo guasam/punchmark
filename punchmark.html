@@ -68,24 +68,26 @@
       }
 
       body {
-        font-family: "Noto Sans", Arial, Helvetica, sans-serif;
+        font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
         line-height: 1.5;
         background-color: #f5f5f5;
+        letter-spacing: 1px;
       }
 
       #rws-header {
         position: relative;
         display: flex;
-        height: 50px;
-        background-color: #3765af;
+        height: 40px;
+        background: linear-gradient(to bottom, #1e1e1e, #212121);
         align-items: center;
         z-index: 100;
+        box-shadow: 0 1px 2px #00000040;
       }
 
       #rws-header .logo {
-        font-weight: bold;
-        color: #fff;
-        margin: 0 16px;
+        font-weight: normal;
+        color: #d5d5d5;
+        margin: 0 10px;
         text-shadow: 0px 1px black;
         font-size: 16px;
       }
@@ -130,11 +132,11 @@
         align-items: center;
         justify-content: center;
         padding: 4px 12px;
-        background: hsl(217deg 52% 35%);
+        background: hsl(0deg 0% 19%);
         margin-right: 16px;
       }
       #console-switch:active {
-        background: hsl(217deg 52% 28%);
+        background: hsl(0deg 0% 16%);
       }
       #console-switch:not(.active) .fa-angle-up,
       #console-switch.active .fa-angle-down {
@@ -144,14 +146,14 @@
       .console {
         display: flex;
         flex-direction: column;
-        background: hsl(217deg 26% 16% / 99%);
+        background: hsl(0deg 0% 10%);
         position: fixed;
-        top: 50px;
+        top: 40px;
         bottom: 0;
         z-index: 10;
         right: 0;
         left: 0;
-        transform: translateY(-100%);
+        transform: translateY(-102%);
         transition: 0.2s transform ease-in-out;
       }
       .console.active {
