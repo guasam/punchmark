@@ -6,8 +6,11 @@
  **/
 
 #include "raylib.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <random>
+#include <iomanip>
+#include <sstream>
+#include <iostream>
+#include <string>
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -53,17 +56,41 @@ int get_canvas_width();
 int get_canvas_height();
 
 
-extern "C" {
+extern "C" 
+{
     int my_add(int a, int b);
 }
 
-int my_add(int a, int b) {
+int my_add(int a, int b) 
+{
+
     return a + b;
 }
 
+
+//// Random numbers doohickey
+//std::random_device randev;
+//std::default_random_engine randen(randev());
+//
+//
+//float getRandomFloat(float min, float max)
+//{
+//    std::uniform_real_distribution<> distr(min, max);
+//    std::stringstream ss;
+//    ss << std::setprecision(2) << distr(randen);
+//    return std::stof(ss.str());
+//}   
+
+
+/// ------------------------------------------
+/// Main execution method
+/// ------------------------------------------
 int main(void)
 {
+    // Initialize random number generator
 
+
+    
 #if defined(PLATFORM_WEB)
     int canvasWidth = get_canvas_width();
     int canvasHeight = get_canvas_height();
@@ -77,7 +104,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "Punch Mark");
 
     // Load Font
-    font = LoadFontEx("resources/Heartbit.otf", (int) fontSize, 0, 250);
+    font = LoadFontEx("resources/Heartbit.otf", (int)fontSize, 0, 250);
 
     // Load punch texture (must be after initializing window to get OpenGL Context)
     punchTexture = LoadTexture("resources/punch.png");
@@ -120,6 +147,7 @@ void UpdateDrawFrame(void)
                 punches[punchesCount].position = GetMousePosition();
                 punches[punchesCount].speed.x = (float)GetRandomValue(-300, 300) * GetFrameTime();
                 punches[punchesCount].speed.y = (float)GetRandomValue(-300, 300) * GetFrameTime();
+                punches[punchesCount].color = ColorFromHSV(GetRandomValue(0, 80), GetRandomValue(0, 1), 1);
                 punchesCount++;
             }
         }
@@ -167,14 +195,13 @@ void UpdateDrawFrame(void)
                 Rectangle{ punches[i].position.x, punches[i].position.y, punchTexture.width * scale, punchTexture.height * scale },
                 Vector2{ punchTexture.width / 2.0f * scale, punchTexture.height / 2.0f * scale },
                 180,
-                WHITE
+                punches[i].color
             );
 
             //DrawCircle((int) punches[i].position.x, (int) punches[i].position.y, 5, MAGENTA);
             //DrawTextEx(font, FormatText("Postiion x : %d y : %d", (int) punches[i].position.x, (int) punches[i].position.y), Vector2{ 20, 20 }, fontSize, 2, RED);
             //DrawTextEx(font, FormatText("Postiion x : %d y : %d", screenWidth, screenHeight), Vector2{ 50, screenHeight - 20.0f }, fontSize, 2, RED);
         }
-
 
         DrawRectangle(0, 0, screenWidth, 30, BLACK);
         DrawText(TextFormat("Punches: %i", punchesCount), 10, 5, 20, RED);
