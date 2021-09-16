@@ -28,6 +28,7 @@ int rotation = 0;
 Vector2 textSize = { 0.0f, 0.0f };
 float fontSize = 22.0f;
 float fontSpacing = 2.0f; // For correct alignement?
+int* fontChars;
 const char* headText = "PUNCH MARK";
 const char* strictText = "Copyright (c) 2021 Guasam";
 
@@ -104,7 +105,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "Punch Mark");
 
     // Load Font
-    font = LoadFontEx("resources/Heartbit.otf", (int)fontSize, 0, 250);
+    font = LoadFontEx("resources/NotoSans-Regular.ttf", (int)fontSize, 0, 250);
 
     // Load punch texture (must be after initializing window to get OpenGL Context)
     punchTexture = LoadTexture("resources/punch.png");
@@ -173,13 +174,15 @@ void UpdateDrawFrame(void)
         ClearBackground(RAYWHITE);
 
         // Draw text
-        textSize = MeasureTextEx(GetFontDefault(), headText, fontSize, fontSpacing);
-        DrawTextEx(font, headText, Vector2{ (screenWidth - textSize.x) / 2.0f, textSize.y + 20 }, (float)font.baseSize, fontSpacing, GRAY);
+        textSize = MeasureTextEx(font, headText, fontSize, fontSpacing);
+        DrawTextEx(font, headText, Vector2{ (screenWidth - textSize.x) / 2.0f, textSize.y + 20 }, fontSize, fontSpacing, GRAY);
 
         // Draw text
-        textSize = MeasureTextEx(GetFontDefault(), strictText, fontSize, fontSpacing);
-        DrawTextEx(font, strictText, Vector2{ (screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20 }, (float)font.baseSize, fontSpacing, GRAY);
+        textSize = MeasureTextEx(font, strictText, fontSize, fontSpacing);
+        DrawTextEx(font, strictText, Vector2{ (screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20 }, fontSize, fontSpacing, GRAY);
+        //DrawRectangleLines((screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20, textSize.x, textSize.y, RED);
 
+        // 
         // Increment rotation
         //rotation++;
 
@@ -204,8 +207,12 @@ void UpdateDrawFrame(void)
         }
 
         DrawRectangle(0, 0, screenWidth, 30, BLACK);
-        DrawText(TextFormat("Punches: %i", punchesCount), 10, 5, 20, RED);
-        DrawFPS(screenWidth - 85, 5);
+        //DrawText(TextFormat("Punches: %i", punchesCount), 10, 5, 20, RED);
+        DrawTextEx(font, TextFormat("Punches: %i", punchesCount), Vector2{ 10, 5 }, fontSize, fontSpacing, WHITE);
+        DrawTextEx(font, TextFormat("FPS: %i", GetFPS()), Vector2{ (float) screenWidth - 75, 5 }, fontSize, fontSpacing, GREEN);
+
+    /*    DrawFPS(screenWidth - 85, 5);
+        GetFPS*/
     }
 
     EndDrawing();
