@@ -148,7 +148,7 @@ void UpdateDrawFrame(void)
                 punches[punchesCount].position = GetMousePosition();
                 punches[punchesCount].speed.x = (float)GetRandomValue(-300, 300) * GetFrameTime();
                 punches[punchesCount].speed.y = (float)GetRandomValue(-300, 300) * GetFrameTime();
-                punches[punchesCount].color = ColorFromHSV(GetRandomValue(0, 80), GetRandomValue(0, 1), 1);
+                punches[punchesCount].color = ColorFromHSV((float) GetRandomValue(0, 80), (float) GetRandomValue(0, 1), 1.0f);
                 punchesCount++;
             }
         }
@@ -175,11 +175,11 @@ void UpdateDrawFrame(void)
 
         // Draw text
         textSize = MeasureTextEx(font, headText, fontSize, fontSpacing);
-        DrawTextEx(font, headText, Vector2{ (screenWidth - textSize.x) / 2.0f, textSize.y + 20 }, fontSize, fontSpacing, GRAY);
+        DrawTextEx(font, headText, Vector2{ (screenWidth - textSize.x) / 2.0f, textSize.y + 20 }, fontSize, fontSpacing, DARKGRAY);
 
         // Draw text
         textSize = MeasureTextEx(font, strictText, fontSize, fontSpacing);
-        DrawTextEx(font, strictText, Vector2{ (screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20 }, fontSize, fontSpacing, GRAY);
+        DrawTextEx(font, strictText, Vector2{ (screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20 }, fontSize, fontSpacing, DARKGRAY);
         //DrawRectangleLines((screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20, textSize.x, textSize.y, RED);
 
         // 
