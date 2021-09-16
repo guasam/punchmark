@@ -173,15 +173,6 @@ void UpdateDrawFrame(void)
         // Clear canvas (OpenGL)
         ClearBackground(RAYWHITE);
 
-        // Draw text
-        textSize = MeasureTextEx(font, headText, fontSize, fontSpacing);
-        DrawTextEx(font, headText, Vector2{ (screenWidth - textSize.x) / 2.0f, textSize.y + 20 }, fontSize, fontSpacing, DARKGRAY);
-
-        // Draw text
-        textSize = MeasureTextEx(font, strictText, fontSize, fontSpacing);
-        DrawTextEx(font, strictText, Vector2{ (screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20 }, fontSize, fontSpacing, DARKGRAY);
-        //DrawRectangleLines((screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20, textSize.x, textSize.y, RED);
-
         // 
         // Increment rotation
         //rotation++;
@@ -210,6 +201,16 @@ void UpdateDrawFrame(void)
         //DrawText(TextFormat("Punches: %i", punchesCount), 10, 5, 20, RED);
         DrawTextEx(font, TextFormat("Punches: %i", punchesCount), Vector2{ 10, 5 }, fontSize, fontSpacing, WHITE);
         DrawTextEx(font, TextFormat("FPS: %i", GetFPS()), Vector2{ (float) screenWidth - 75, 5 }, fontSize, fontSpacing, GREEN);
+
+        // Draw text
+        textSize = MeasureTextEx(font, headText, fontSize, fontSpacing);
+        DrawTextEx(font, TextFormat(headText), Vector2{ (screenWidth - textSize.x) / 2.0f, textSize.y + 20 }, fontSize, fontSpacing, BLACK);
+        textSize = { 0, 0 };
+
+        // Draw text
+        textSize = MeasureTextEx(font, strictText, fontSize, fontSpacing);
+        DrawTextEx(font, TextFormat(strictText), Vector2{ (screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20 }, fontSize, fontSpacing, BLACK);
+        //DrawRectangleLines((screenWidth - textSize.x) / 2.0f, screenHeight - textSize.y - 20, textSize.x, textSize.y, RED);
 
     /*    DrawFPS(screenWidth - 85, 5);
         GetFPS*/
